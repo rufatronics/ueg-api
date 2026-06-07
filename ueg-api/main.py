@@ -18,6 +18,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from config import (
+    MODEL_REPO,
     INTENT_CLASSES, RESOURCE_CLASSES,
     get_routing_action, HOST, PORT,
 )
@@ -183,7 +184,7 @@ def _classify_text(text: str, include_probs: bool = False) -> dict:
 async def health():
     return {
         "status": "ok" if engine.ready else "loading",
-        "model":  "rufatronics/ueg-classifier",
+        "model":  MODEL_REPO,
         "ready":  engine.ready,
     }
 
@@ -192,7 +193,7 @@ async def health():
 async def info():
     return {
         "model":        "ueg-classifier-v1",
-        "repo":         "rufatronics/ueg-classifier",
+        "repo":         MODEL_REPO,
         "parameters":   "35M",
         "intent_classes": {
             v["id"]: {"label": v["label"], "tier": v["tier"]}

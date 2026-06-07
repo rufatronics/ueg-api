@@ -1,6 +1,7 @@
 """
 UEG API — Configuration
 All constants derived from taxonomy and training config.
+No secrets needed — model repo is public.
 """
 
 import os
@@ -8,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# HuggingFace — no token needed, repo is public
+# HuggingFace — public repo, no token needed
 MODEL_REPO = os.getenv("MODEL_REPO", "rufatronics/ueg-classifier")
 
 # Server
@@ -26,7 +27,7 @@ DROPOUT      = 0.1
 NUM_INTENT   = 22
 NUM_RESOURCE = 5
 
-# Intent classes — 1-indexed matching taxonomy
+# Intent classes — 0-indexed model output → taxonomy info
 INTENT_CLASSES = {
     0:  {"id": 1,  "label": "noise_gibberish",        "tier": "1"},
     1:  {"id": 2,  "label": "adversarial_probe",       "tier": "1"},
@@ -64,7 +65,7 @@ RESOURCE_CLASSES = {
 # Routing action per tier
 ROUTING_ACTIONS = {
     "1":  {
-        "noise_gibberish":  "drop",
+        "noise_gibberish":   "drop",
         "adversarial_probe": "block",
     },
     "2":  "static_template",

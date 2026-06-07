@@ -1,22 +1,23 @@
 # UEG REST API
 
 Universal Edge Gateway — intent classifier REST API.
+No API keys needed. Model is public on HuggingFace.
 
-## Setup
+## Deploy on Render (recommended)
+
+1. Push this folder to a GitHub repo
+2. Go to render.com → New → Web Service
+3. Connect your GitHub repo
+4. Render detects render.yaml automatically
+5. Click Deploy — done
+
+Your API will be live at `https://ueg-api.onrender.com`
+
+## Run locally
 
 ```bash
-cp .env.example .env
-# Edit .env and add your HF_TOKEN
-
 pip install -r requirements.txt
 python main.py
-```
-
-## Docker
-
-```bash
-docker build -t ueg-api .
-docker run -p 8000:8000 --env-file .env ueg-api
 ```
 
 ## Endpoints
