@@ -39,10 +39,21 @@ class UEGInferenceEngine:
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
         logger.info(f"Loading UEG from {MODEL_REPO}...")
 
-        # Download files from public HF repo
+        # Download ONNX model
         onnx_path = self._download("export/ueg_model.onnx")
-        tok_path  = self._download("tokenizer/tokenizer.json")
-        cfg_path  = self._download("tokenizer/tokenizer_config.json")
+
+        # Download external data file — ONNX splits large models into .onnx + .onnx.data
+        onnx_data_path = self._download("export/ueg_model.onnx.data")
+
+        # Both files must sit in the same directory for ONNX Runtime to find the data
+        expected_data = onnx_path.parent / "ueg_model.onnx.data"
+        if not expected_data.exists():
+            shutil.copy(onnx_data_path, expected_data)
+            logger.info(f"Copied external data to {expected_data}")
+
+        # Download tokenizer
+        tok_path = self._download("tokenizer/tokenizer.json")
+        cfg_path = self._download("tokenizer/tokenizer_config.json")
 
         # Get pad_id from tokenizer config
         with open(cfg_path) as f:
@@ -69,7 +80,7 @@ class UEGInferenceEngine:
             sess_options=opts,
             providers=["CPUExecutionProvider"],
         )
-        logger.info(f"ONNX session ready")
+        logger.info("ONNX session ready")
         self._ready = True
         logger.info("UEG engine ready ✓")
 
